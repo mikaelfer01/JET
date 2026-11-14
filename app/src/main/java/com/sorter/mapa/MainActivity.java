@@ -31,6 +31,18 @@ public class MainActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         web = new WebView(this);
         setContentView(web);
+        getWindow().getDecorView().setBackgroundColor(0xFFF1F3F7);
+        web.setBackgroundColor(0xFFF1F3F7);
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+            web.setOnApplyWindowInsetsListener((v, ins) -> {
+                android.view.DisplayCutout dc = ins.getDisplayCutout();
+                if (dc != null) v.setPadding(dc.getSafeInsetLeft(), 0, dc.getSafeInsetRight(), 0);
+                return ins;
+            });
+        }
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
